@@ -9,7 +9,7 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose port (if needed)
-EXPOSE 8000
+EXPOSE 7860
 
 # Default command
-CMD ["python", "inference.py"]
+CMD ["uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "7860"]

@@ -1,17 +1,33 @@
 from fastapi import FastAPI
-import uvicorn
+from env.environment import EmailEnv
+from env.models import Action
 
 app = FastAPI()
 
+env = EmailEnv()
+
+
 @app.get("/")
-def read_root():
+def root():
     return {"message": "Email Env Running"}
 
 
-def main():
-    """Entry point for OpenEnv"""
-    uvicorn.run(app, host="127.0.0.1", port=7860)
+@app.post("/reset")
+def reset(task: str = "easy"):
+    return env.reset(task)
 
 
-if __name__ == "__main__":
-    main()
+@app.post("/step")
+def step(action: Action):
+    obs, reward, done, info = env.step(action)
+    return {
+        "observation": obs,
+        "reward": reward,
+        "done": done,
+        "info": info
+    }
+
+
+@app.get("/state")
+def state():
+    return env.state()

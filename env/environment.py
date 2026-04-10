@@ -1,70 +1,53 @@
-from env.models import Observation, Action, Reward
-from env.tasks import load_tasks
+from env.models import Observation, Reward
 from env.grader import grade_easy, grade_medium, grade_hard
+from env.tasks import load_tasks
+
 
 class EmailEnv:
     def __init__(self):
         self.tasks = load_tasks()
-        self.index = 0
-        self.current = None
+        self.current_index = 0
         self.step_count = 0
-        self.mode = "easy"  
+        self.mode = "easy"
 
-    def reset(self):
-        self.index = 0
+    def reset(self, task="easy"):
+        self.mode = task
+        self.current_index = 0
         self.step_count = 0
-        self.current = self.tasks[self.index]
-        
+        return self._get_observation()
+
+    def _get_observation(self):
+        email = self.tasks[self.current_index]
+
         return Observation(
-            email_text=self.current["email_text"],
-            sender=self.current["sender"],
-            subject=self.current["subject"],
+            email_text=email["email_text"],
+            sender=email["sender"],
+            subject=email["subject"],
             step_count=self.step_count
-        )
+        ).dict()
 
-    def step(self, action: Action):
-        self.step_count += 1
-        
-        correct_label = self.current["label"]
-        correct_priority = self.current.get("priority", "low")
+    def step(self, action):
+        email = self.tasks[self.current_index]
 
-        # SWITCH BASED ON MODE
         if self.mode == "easy":
-            score = grade_easy(action, correct_label)
-            reason = "Correct classification" if score == 1 else "Wrong classification"
+            reward_value = grade_easy(action, email["label"])
 
         elif self.mode == "medium":
-            score = grade_medium(action, correct_priority)
-            reason = "Correct priority" if score == 1 else "Wrong priority"
+            reward_value = grade_medium(action, email["priority"])
 
-        else:  # HARD
-            score = grade_hard(action, correct_label)
-            reason = "Full task evaluation"
+        else:
+            reward_value = grade_hard(action, email["label"])
 
-        reward = Reward(
-            value=score,
-            reason=reason
-        )
+        reward = Reward(value=reward_value, reason="evaluated")
 
-        done = True  # single-step for now
+        self.step_count += 1
+        done = True  # single-step environment
 
-        return (
-            Observation(
-                email_text="",
-                sender="",
-                subject="",
-                step_count=self.step_count
-            ),
-            reward,
-            done,
-            {
-                "score": score,
-                "mode": self.mode
-            }
-        )
+        return self._get_observation(), reward.dict(), done, {}
 
     def state(self):
         return {
-            "current_index": self.index,
-            "step_count": self.step_count
+            "current_index": self.current_index,
+            "step_count": self.step_count,
+            "mode": self.mode
         }

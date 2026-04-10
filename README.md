@@ -127,3 +127,13 @@ A rule-based intelligent agent is implemented in `inference.py`:
 
 ```bash
 pip install -r requirements.txt
+
+---
+title: Email Triage OpenEnv
+emoji: 📧
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_file: server/app.py
+pinned: false
+---

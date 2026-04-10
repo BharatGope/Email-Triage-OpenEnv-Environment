@@ -21,6 +21,6 @@
     "sender": "team@company.com",
     "email_text": "Please review the attached document",
     "label": "work",
-    "priority": "medium"
+    "priority": "low"
   }
 ]
