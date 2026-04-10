@@ -1,0 +1,16 @@
+name: email-env
+version: 1.0
+
+description: Email triage environment for classification and prioritization of emails
+
+entrypoint: env.environment:EmailEnv
+
+tasks:
+  - easy
+  - medium
+  - hard
+  
+tags:
+  - openenv
+  - email
+  - ai

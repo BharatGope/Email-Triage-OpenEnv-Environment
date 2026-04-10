@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "subject": "Win a free iPhone now!!!",
+    "sender": "spam@fake.com",
+    "email_text": "Click this link to win a free iPhone",
+    "label": "spam",
+    "priority": "low"
+  },
+  {
+    "id": 2,
+    "subject": "Meeting tomorrow",
+    "sender": "boss@company.com",
+    "email_text": "We have a meeting at 10 AM",
+    "label": "important",
+    "priority": "high"
+  },
+  {
+    "id": 3,
+    "subject": "Project update",
+    "sender": "team@company.com",
+    "email_text": "Please review the attached document",
+    "label": "work",
+    "priority": "medium"
+  }
+]
